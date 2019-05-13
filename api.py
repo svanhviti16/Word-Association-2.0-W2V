@@ -1,28 +1,32 @@
+# Backend for a word association game by Svanhvít Lilja Ingólfsdóttir
+# word2vec model is given as first command line argument (.model file)
+# ex.: 
+# $ python3 api.py WV_RMH/RMH2_w2v.model
+
+
 import requests
 import responder
 import sys
 from urllib.parse import unquote
-#from reynir.bincompress import BIN_Compressed
 from gensim.models import Word2Vec
 from gensim import models
 import codecs
 import random
 
-# python3 api.py data/RMH2_w2v.model data/IS_WN/core-isl.txt 
 
-#beygingarlýsing
-#bin = BIN_Compressed()
-
-# word2vec model given as first command line argument
 def load_model():
     model_file = sys.argv[1] 
     model = Word2Vec.load(model_file)
     return model
 
-word_list = ["ostur", "forseti", "tónlist", "klukka", "gluggi", "peysa", "Ísland", "tennis", "tölva", "sígaretta",
-            "Reykjavík", "súkkulaði", "skóli", "kerti", "grænmeti", "jól", "bíll", "hundur", "skip", "dauði", "Bandaríkin",
-            "vinna", "læknir", "gleraugu", "kjóll", "bíómynd", "sjónvarp", "fótbolti", "mús", "stjórnmál", 
-             "kennari", "sundlaug", "krá", "bjór", "sumarfrí", "verðlaun"]
+word_list = [ "ostur", "forseti", "tónlist", "klukka", "gluggi", "peysa", "Ísland", "tennis", "tölva", "sígaretta", "sauðfjárbændur", "haust",
+            "Reykjavík", "súkkulaði", "skóli", "kerti", "grænmeti", "jól", "bíll", "hundur", "skip", "dauði", "Bandaríkin", "kosningar", "Færeyjar",
+            "vinna", "læknir", "gleraugu", "kjóll", "bíómynd", "sjónvarp", "fótbolti", "mús", "stjórnmál", "Laddi", "femínistar", "Ísafjörður", 
+            "kennari", "sundlaug", "krá", "bjór", "sumarfrí", "verðlaun", "auga", "ljótur", "sætur", "illska", "veikindi", "sjór", 
+            "HÍ", "skyr", "trúður", "hamborgari", "Eiður", "svartur", "Facebook", "Eurovision", "Köben", "tíska", "brandari", "Sódóma", "Sjálfstæðisflokkurinn",
+            "rokk", "hjarta", "kvef", "gítar", "Bjöggi", "Megas", "Vigdís", "Madonna", "kanína", "Öskjuhlíð", "Laugavegur", "einkabíll", "grilla",
+            "Morthens", "hákarl", "útrásarvíkingur", "plokkfiskur", "fíll", "Stuðmenn", "próf", "iPhone", "sjómenn", "gluggaveður", "hálfviti", "líf", 
+            "afmæli", "Obama", "djamm", "Bítlarnir", "te", "sjúklega", "Bjarnfreðarson", "kex", "mjór", "feitur", "veiðiferð", "meðferð", "bólusetningar" ]
 
 model = load_model()
 
@@ -54,7 +58,6 @@ def is_valid_word(req, resp, *, userword, mainword, otherwords):
     print(f'userword: {user_word}, mainword: {main_word}, most_similar: {most_similar_to_input}, allthewords: {all_words}')
     if main_word == most_similar_to_input:
         answer = True
-        print("RÉTT, orðið er " + mainword)
     else:
         answer = False
     resp.media = {'is_correct': answer, 'most_similar' : most_similar_to_input}
